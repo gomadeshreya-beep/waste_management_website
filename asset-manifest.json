@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/waste_management_website/static/css/main.89b61767.css",
-    "main.js": "/waste_management_website/static/js/main.5fd98c41.js",
+    "main.css": "/waste_management_website/static/css/main.30f55fb8.css",
+    "main.js": "/waste_management_website/static/js/main.99c98d6b.js",
     "index.html": "/waste_management_website/index.html",
-    "main.89b61767.css.map": "/waste_management_website/static/css/main.89b61767.css.map",
-    "main.5fd98c41.js.map": "/waste_management_website/static/js/main.5fd98c41.js.map"
+    "main.30f55fb8.css.map": "/waste_management_website/static/css/main.30f55fb8.css.map",
+    "main.99c98d6b.js.map": "/waste_management_website/static/js/main.99c98d6b.js.map"
   },
   "entrypoints": [
-    "static/css/main.89b61767.css",
-    "static/js/main.5fd98c41.js"
+    "static/css/main.30f55fb8.css",
+    "static/js/main.99c98d6b.js"
   ]
 }
