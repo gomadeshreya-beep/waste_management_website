@@ -7,8 +7,13 @@ function ReportCard({ report, canResolve = false, onResolve, resolving = false, 
     return `${API_BASE_URL}/uploads/${encodeURIComponent(image)}`;
   };
   const created = report.createdAt ? new Date(report.createdAt).toLocaleDateString() : "";
-  const hasCoordinates = Number.isFinite(Number(report.latitude)) && Number.isFinite(Number(report.longitude));
-  const mapUrl = hasCoordinates ? `https://www.openstreetmap.org/?mlat=${Number(report.latitude)}&mlon=${Number(report.longitude)}#map=18/${Number(report.latitude)}/${Number(report.longitude)}` : "";
+  const latitude = Number(report.latitude);
+  const longitude = Number(report.longitude);
+  const hasCoordinates = report.latitude !== null && report.latitude !== undefined && report.latitude !== ""
+    && report.longitude !== null && report.longitude !== undefined && report.longitude !== ""
+    && Number.isFinite(latitude) && latitude >= -90 && latitude <= 90
+    && Number.isFinite(longitude) && longitude >= -180 && longitude <= 180;
+  const mapUrl = hasCoordinates ? `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}#map=18/${latitude}/${longitude}` : "";
   const address = report.location && report.location !== "Exact coordinates available to the local team"
     ? report.location
     : "Address unavailable";
@@ -24,6 +29,7 @@ function ReportCard({ report, canResolve = false, onResolve, resolving = false, 
         </div>
         <p>{report.description || "No additional details provided."}</p>
         {(address || report.area || created) && <small>{[address, report.area && report.area !== "Device GPS" && !address.includes(report.area) ? report.area : "", created].filter(Boolean).join(" · ")}</small>}
+        {hasCoordinates && <small><a href={mapUrl} target="_blank" rel="noreferrer">View exact pin on map</a></small>}
         {report.locationSource === "openstreetmap" && <small>Address data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a></small>}
         {showReporter && <small className="report-reporter">Reported by: {report.userId?.email || "Account unavailable"}</small>}
         {showReporter && hasCoordinates && <small className="report-gps">Device GPS: <a href={mapUrl} target="_blank" rel="noreferrer">{Number(report.latitude).toFixed(6)}, {Number(report.longitude).toFixed(6)}</a> · accuracy about {Math.round(Number(report.locationAccuracy) || 0)} m</small>}
