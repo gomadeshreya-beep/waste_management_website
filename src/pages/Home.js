@@ -1,16 +1,17 @@
+import { Link } from "react-router-dom";
 import "../styles/theme.css";
 
 function Home() {
   return (
     <div className="home-page">
       <header className="navbar">
-        <a className="logo" href="/">
+        <Link className="logo" to="/">
           <span>♻</span> CleanNeighbour
-        </a>
+        </Link>
 
         <nav>
-          <a href="/login">Login</a>
-          <a className="nav-button" href="/register">Register</a>
+          <Link to="/login">Login</Link>
+          <Link className="nav-button" to="/register">Register</Link>
         </nav>
       </header>
 
