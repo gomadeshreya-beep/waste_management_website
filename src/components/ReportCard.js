@@ -28,6 +28,7 @@ function ReportCard({ report, canResolve = false, onResolve, resolving = false, 
           </span>
         </div>
         <p>{report.description || "No additional details provided."}</p>
+        {report.landmark && <small>Nearby street or landmark: {report.landmark}</small>}
         {(address || report.area || created) && <small>{[address, report.area && report.area !== "Device GPS" && !address.includes(report.area) ? report.area : "", created].filter(Boolean).join(" · ")}</small>}
         {hasCoordinates && <small><a href={mapUrl} target="_blank" rel="noreferrer">View exact pin on map</a></small>}
         {report.locationSource === "openstreetmap" && <small>Address data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a></small>}

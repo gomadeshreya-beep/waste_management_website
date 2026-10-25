@@ -62,6 +62,7 @@ function Dashboard() {
   const [locationStatus, setLocationStatus] = useState("locating");
   const [locationMessage, setLocationMessage] = useState("");
   const [description, setDescription] = useState("");
+  const [landmark, setLandmark] = useState("");
   const [photo, setPhoto] = useState(null);
   const [tab, setTab] = useState("active");
   const [error, setError] = useState("");
@@ -128,6 +129,8 @@ function Dashboard() {
     event.preventDefault();
     const form = event.currentTarget;
     setError("");
+    if (!landmark.trim()) { setError("Please enter a nearby street or landmark."); return; }
+    if (!description.trim()) { setError("Please describe what you saw."); return; }
     if (!photo) { setError("Please attach a photo of the waste issue."); return; }
     if (photo.size > 4 * 1024 * 1024) { setError("Please choose a photo smaller than 4 MB."); return; }
     setSubmitting(true);
@@ -135,13 +138,14 @@ function Dashboard() {
       const currentLocation = await updateDeviceLocation();
       const formData = new FormData();
       formData.append("title", title.trim());
+      formData.append("landmark", landmark.trim());
       formData.append("latitude", String(currentLocation.latitude));
       formData.append("longitude", String(currentLocation.longitude));
       formData.append("locationAccuracy", String(currentLocation.accuracy));
       formData.append("description", description.trim());
       formData.append("photo", photo);
       await reportIssue(formData);
-      setTitle(""); setDescription(""); setPhoto(null);
+      setTitle(""); setLandmark(""); setDescription(""); setPhoto(null);
       form.reset();
       setTab("active");
       await loadReports();
@@ -203,13 +207,14 @@ function Dashboard() {
       {user.role !== "admin" && user.role !== "municipal" && <section className="dashboard-submit">
         <div className="dashboard-section-heading"><div><p className="dashboard-kicker">HELP YOUR COMMUNITY</p><h2>Report a waste issue</h2><p>Share a photo. Your browser will ask permission to capture the issue location. Exact coordinates go to the local team; public report lists hide them.</p></div><span className="submit-emoji" aria-hidden="true">🌱</span></div>
         <form className="dashboard-form" onSubmit={handleSubmit}>
-          <input type="text" aria-label="Short title" placeholder="Short title (e.g. Waste dumped near park)" value={title} onChange={(e) => setTitle(e.target.value)} required maxLength={100} />
+          <input type="text" aria-label="Short title (required)" placeholder="Short title (e.g. Waste dumped near park) — required" value={title} onChange={(e) => setTitle(e.target.value)} required maxLength={100} />
+          <input type="text" aria-label="Street or nearby landmark (required)" placeholder="Street or nearby landmark — required" value={landmark} onChange={(e) => setLandmark(e.target.value)} required maxLength={200} />
           <div className={`dashboard-location-status ${locationStatus === "error" ? "has-error" : ""}`} role="status" aria-live="polite">
             <span>{locationMessage || "Finding your device location… Keep location enabled; this can take up to 30 seconds."}</span>
             {locationStatus !== "locating" && <button type="button" onClick={() => updateDeviceLocation().catch(() => {})}>{locationStatus === "ready" ? "Refresh location" : "Try again"}</button>}
           </div>
-          <textarea aria-label="Issue details" placeholder="Describe what you saw (optional)" value={description} onChange={(e) => setDescription(e.target.value)} maxLength={1000} />
-          <label className="dashboard-file">Photo of the issue<input type="file" accept="image/*" onChange={(e) => setPhoto(e.target.files?.[0] || null)} required /></label>
+          <textarea aria-label="Issue details (required)" placeholder="Describe what you saw — required" value={description} onChange={(e) => setDescription(e.target.value)} required maxLength={1000} />
+          <label className="dashboard-file">Photo of the issue (required)<input type="file" accept="image/*" onChange={(e) => setPhoto(e.target.files?.[0] || null)} required /></label>
           <button type="submit" disabled={submitting || locationStatus !== "ready"}>{submitting ? "Sending report…" : locationStatus === "locating" ? "Finding location…" : "Submit report"}</button>
         </form>
         {error && <p className="dashboard-error" role="alert">{error}</p>}
