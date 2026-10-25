@@ -4,6 +4,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Dashboard from "./pages/Dashboard";
 import VerifyEmail from "./pages/VerifyEmail";
+import AdminApproval from "./pages/AdminApproval";
 import "./styles/theme.css";
 import "./App.css";
 
@@ -13,11 +14,12 @@ function App() {
       ? "/waste_management_website"
       : "/";
   const isVerificationLink = new URLSearchParams(window.location.search).get("verify") === "1";
+  const isAdminApprovalLink = new URLSearchParams(window.location.search).get("adminApproval") === "1";
 
   return (
     <BrowserRouter basename={basename}>
       <Routes>
-        <Route path="/" element={isVerificationLink ? <VerifyEmail /> : <Home />} />
+        <Route path="/" element={isAdminApprovalLink ? <AdminApproval /> : isVerificationLink ? <VerifyEmail /> : <Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify" element={<VerifyEmail />} />

@@ -69,8 +69,8 @@ function Register() {
     <main className="auth-page">
       <section className="register auth-card">
         <Link className="auth-brand" to="/">♻ CleanNeighbour</Link>
-        <h2>{accountType === "admin" ? "Create an admin account" : "Create a resident account"}</h2>
-        <p>{accountType === "admin" ? "Admin access is limited to the approved CleanNeighbour admin email." : "Join your neighbourhood and help report waste issues."}</p>
+        <h2>{accountType === "admin" ? "Request admin access" : "Create a resident account"}</h2>
+        <p>{accountType === "admin" ? "Your request will be reviewed by the CleanNeighbour website team before admin access is granted." : "Join your neighbourhood and help report waste issues."}</p>
         <div className="auth-role-switch" role="group" aria-label="Register as">
           <button type="button" className={accountType === "resident" ? "selected" : ""} aria-pressed={accountType === "resident"} onClick={() => { setAccountType("resident"); setError(""); setMessage(""); }}>Resident</button>
           <button type="button" className={accountType === "admin" ? "selected" : ""} aria-pressed={accountType === "admin"} onClick={() => { setAccountType("admin"); setError(""); setMessage(""); }}>Admin</button>
@@ -102,7 +102,7 @@ function Register() {
             required
           />
           <label htmlFor="register-email">Email</label>
-          {accountType === "admin" && <small className="auth-role-note">Use the approved CleanNeighbour admin email. The verification email goes to that admin mailbox.</small>}
+          {accountType === "admin" && <small className="auth-role-note">An approval link will be sent to cleanneighbour.admin@gmail.com. Admin access starts only after the team approves your request.</small>}
           <input
             id="register-email"
             className="auth-input"
@@ -137,7 +137,7 @@ function Register() {
             </button>
           </div>
           <button className="auth-button" type="submit" disabled={loading || serverStatus !== "ready"}>
-            {loading ? "Creating account..." : serverStatus === "connecting" ? "Connecting..." : "Register"}
+            {loading ? accountType === "admin" ? "Sending request..." : "Creating account..." : serverStatus === "connecting" ? "Connecting..." : accountType === "admin" ? "Send admin request" : "Register"}
           </button>
         </form>
         <p className="auth-switch">Already registered? <Link to="/login">Login</Link></p>
