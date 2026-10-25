@@ -81,6 +81,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .auth-brand { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 27px; color: var(--green-800); font-size: 14px; font-weight: 750; }
 .auth-card h2 { margin: 0; color: var(--green-900); font-size: 30px; letter-spacing: -1px; }
 .auth-card > p:not(.auth-error):not(.auth-success) { margin: 9px 0 25px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.auth-role-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 0 0 17px; padding: 4px; border: 1px solid #d8e1d7; border-radius: 10px; background: #f5f8f4; }
+.auth-role-switch button { min-height: 38px; border: 0; border-radius: 7px; background: transparent; color: #526459; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.auth-role-switch button.selected { background: white; color: var(--green-800); box-shadow: 0 1px 5px rgba(27, 55, 36, .12); }
+.auth-role-switch button:focus-visible { outline: 2px solid var(--green-600); outline-offset: 2px; }
+.auth-role-note { margin: -3px 0 3px; color: var(--muted); font-size: 11px; line-height: 1.5; }
 .auth-form { display: grid; gap: 9px; }
 .auth-form label { margin-top: 5px; color: #425448; font-size: 12px; font-weight: 700; }
 .auth-input { width: 100%; min-height: 46px; padding: 11px 13px; border: 1px solid #d8e1d7; border-radius: 9px; background: #fbfcfa; color: var(--ink); font-size: 14px; transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease; }

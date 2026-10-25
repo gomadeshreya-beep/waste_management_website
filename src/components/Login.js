@@ -5,6 +5,7 @@ import useBackendWarmup from "../hooks/useBackendWarmup";
 import "../styles/theme.css";
 
 function Login() {
+  const [accountType, setAccountType] = useState("resident");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -23,7 +24,7 @@ function Login() {
     setVerificationEmail("");
     setLoading(true);
     try {
-      const { data } = await loginUser({ email, password });
+      const { data } = await loginUser({ email, password, accountType });
       if (!data.token) throw new Error("The server did not return a login token.");
       sessionStorage.setItem("cleanlane-token", data.token);
       sessionStorage.setItem("cleanlane-user", JSON.stringify(data.user));
@@ -55,8 +56,12 @@ function Login() {
     <main className="auth-page">
       <section className="login auth-card">
         <Link className="auth-brand" to="/">♻ CleanNeighbour</Link>
-        <h2>Login</h2>
-        <p>Log in to report issues and follow their progress.</p>
+        <h2>{accountType === "admin" ? "Admin login" : "Resident login"}</h2>
+        <p>{accountType === "admin" ? "Log in to manage community reports." : "Log in to report issues and follow their progress."}</p>
+        <div className="auth-role-switch" role="group" aria-label="Login as">
+          <button type="button" className={accountType === "resident" ? "selected" : ""} aria-pressed={accountType === "resident"} onClick={() => { setAccountType("resident"); setError(""); setVerificationEmail(""); setVerificationMessage(""); }}>Resident</button>
+          <button type="button" className={accountType === "admin" ? "selected" : ""} aria-pressed={accountType === "admin"} onClick={() => { setAccountType("admin"); setError(""); setVerificationEmail(""); setVerificationMessage(""); }}>Admin</button>
+        </div>
         {error && <p className="auth-error" role="alert">{error}</p>}
         {verificationMessage && <p className="auth-success" role="status">{verificationMessage}</p>}
         {verificationEmail && <button className="auth-secondary-button" type="button" onClick={handleResendVerification} disabled={resending || serverStatus !== "ready"}>{resending ? "Sending…" : "Resend verification email"}</button>}

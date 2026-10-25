@@ -5,6 +5,7 @@ import useBackendWarmup from "../hooks/useBackendWarmup";
 import "../styles/theme.css";
 
 function Register() {
+  const [accountType, setAccountType] = useState("resident");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +33,7 @@ function Register() {
     setLoading(true);
     try {
       const submittedEmail = email.trim().toLowerCase();
-      const { data } = await registerUser({ name: name.trim(), email: submittedEmail, password });
+      const { data } = await registerUser({ name: name.trim(), email: submittedEmail, password, accountType });
       setMessage(data.message || "Registration successful! Please check your inbox or spam for the verification email.");
       setVerificationEmail(data.verificationRequired ? submittedEmail : "");
       setName("");
@@ -68,8 +69,12 @@ function Register() {
     <main className="auth-page">
       <section className="register auth-card">
         <Link className="auth-brand" to="/">♻ CleanNeighbour</Link>
-        <h2>Create an account</h2>
-        <p>Join your neighbourhood and help report waste issues.</p>
+        <h2>{accountType === "admin" ? "Create an admin account" : "Create a resident account"}</h2>
+        <p>{accountType === "admin" ? "Admin access is limited to the approved CleanNeighbour admin email." : "Join your neighbourhood and help report waste issues."}</p>
+        <div className="auth-role-switch" role="group" aria-label="Register as">
+          <button type="button" className={accountType === "resident" ? "selected" : ""} aria-pressed={accountType === "resident"} onClick={() => { setAccountType("resident"); setError(""); setMessage(""); }}>Resident</button>
+          <button type="button" className={accountType === "admin" ? "selected" : ""} aria-pressed={accountType === "admin"} onClick={() => { setAccountType("admin"); setError(""); setMessage(""); }}>Admin</button>
+        </div>
         {error && <p className="auth-error" role="alert">{error}</p>}
         {message && <p className="auth-success" role="status">{message}</p>}
         {verificationEmail && <button className="auth-secondary-button" type="button" onClick={handleResendVerification} disabled={resending || serverStatus !== "ready"}>{resending ? "Sending…" : "Resend verification email"}</button>}
@@ -97,6 +102,7 @@ function Register() {
             required
           />
           <label htmlFor="register-email">Email</label>
+          {accountType === "admin" && <small className="auth-role-note">Use the approved CleanNeighbour admin email. The verification email goes to that admin mailbox.</small>}
           <input
             id="register-email"
             className="auth-input"
